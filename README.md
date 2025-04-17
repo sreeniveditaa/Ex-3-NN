@@ -1,5 +1,5 @@
-<H3>ENTER YOUR NAME</H3>
-<H3>ENTER YOUR REGISTER NO.</H3>
+<H3>NAME : Sree Niveditaa Saravanan</H3>
+<H3>REGISTER NO. : 212223230213</H3>
 <H3>EX. NO.3</H3>
 <H3>DATE:</H3>
 <H2 aligh = center> Implementation of MLP for a non-linearly separable data</H2>
@@ -24,23 +24,93 @@ The number of layers in MLP is not fixed and thus can have any number of hidden 
 
 <h3>Algorithm :</H3>
 
-Step 1 : Initialize the input patterns for XOR Gate<BR>
-Step 2: Initialize the desired output of the XOR Gate<BR>
-Step 3: Initialize the weights for the 2 layer MLP with 2 Hidden neuron  and 1 output neuron<BR>
-Step 3: Repeat the  iteration  until the losses become constant and  minimum<BR>
+### Step 1 : 
+Initialize the input patterns for XOR Gate<BR>
+### Step 2:
+Initialize the desired output of the XOR Gate<BR>
+### Step 3: 
+Initialize the weights for the 2 layer MLP with 2 Hidden neuron  and 1 output neuron<BR>
+### Step 3: 
+Repeat the  iteration  until the losses become constant and  minimum<BR>
     (i)  Compute the output using forward pass output<BR>
     (ii) Compute the error<BR>
 	(iii) Compute the change in weight ‘dw’ by using backward progatation algorithm. <BR>
     (iv) Modify the weight as per delta rule.<BR>
     (v)  Append the losses in a list <BR>
-Step 4 : Test for the XOR patterns.
+### Step 4 : 
+Test for the XOR patterns.
 
 <H3>Program:</H3>
-Insert your code here
+```
+import numpy as np
+import pandas as pd
+import io
+import matplotlib.pyplot as plt
+# Initialize the input vector and output vector for XOR
+x=np.array([[0,0,1,1],[0,1,0,1]])
+y=np.array([[0,1,1,0]])
+#Initialize the structure of  MLP with input ,hidden  and output layer
+n_x = 2
+n_y = 1
+n_h = 2
+m = x.shape[1]
+lr = 0.1 
+# Weight matrix for hidden layer randomly
+w1 = np.random.rand(n_h,n_x)   # Weight matrix for hidden layer
+w2 = np.random.rand(n_y,n_h)  # Weight matrix for output layer
+losses = []
+def sigmoid(z):
+  z=1/(1+np.exp(-z))
+  return z
+def forward_prop(w1,w2,x):
+  z1 = np.dot(w1,x)
+  a1 = sigmoid(z1)
+  z2 = np.dot(w2,a1)
+  a2 = sigmoid(z2)
+  return z1,a1,z2,a2
+def back_prop(m,w1,w2,z1,a1,z2,a2,y):
+    dz2 = a2-y
+    dw2 = np.dot(dz2,a1.T)/m
+    dz1 = np.dot(w2.T,dz2) * a1*(1-a1)
+    dw1 = np.dot(dz1,x.T)/m
+    dw1 = np.reshape(dw1,w1.shape)
+    dw2 = np.reshape(dw2,w2.shape)
+    return dz2,dw2,dz1,dw1
+iterations = 10000
+for i in range(iterations):
+  z1,a1,z2,a2 = forward_prop(w1,w2,x)
+  loss = -(1/m)*np.sum(y*np.log(a2)+(1-y)*np.log(1-a2))
+  losses.append(loss)
+  da2,dw2,dz1,dw1 = back_prop(m,w1,w2,z1,a1,z2,a2,y)
+  w2 = w2-lr*dw2
+  w1 = w1-lr*dw1
+# We plot losses to see how our network is doing
+plt.plot(losses)
+plt.xlabel("EPOCHS")
+plt.ylabel("Loss value")
+def predict(w1,w2,input):
+    z1,a1,z2,a2 = forward_prop(w1,w2,test)
+    a2 = np.squeeze(a2)
+    if a2>=0.5:
+        print( [i[0] for i in input], 1)
+    else:
+        print( [i[0] for i in input], 0)
+print('Input',' Output')
+test=np.array([[1],[0]])
+predict(w1,w2,test)
+test=np.array([[1],[1]])
+predict(w1,w2,test)
+test=np.array([[0],[1]])
+predict(w1,w2,test)
+test=np.array([[0],[0]])
+predict(w1,w2,test)
+```
 
 <H3>Output:</H3>
+![{ACA6F577-FCA7-4F7E-8B9E-23FFA41DA516}](https://github.com/user-attachments/assets/6fc497d4-b169-4681-99bc-2066fc1486ad)
+![{AAFCA2F5-0527-4A9E-B420-43008DEDE99B}](https://github.com/user-attachments/assets/ae824633-f066-4f07-94d7-521f9456653f)
 
-Show your results here
+
 
 <H3> Result:</H3>
 Thus, XOR classification problem can be solved using MLP in Python 
